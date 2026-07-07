@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Your Chess Personality</title>
+    <!-- Boxicons for modern UI Icons -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #121214;
+            --card-bg: #1e1e24;
+            --accent-color: #a78bfa;
+            --accent-hover: #c084fc;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --option-hover: #2d2d39;
+            --success: #34d399;
+            --danger: #f87171;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .quiz-container {
+            width: 100%;
+            max-width: 700px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border: 1px solid #2d2d39;
+        }
+
+        .logo-icon {
+            font-size: 4.5rem;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            display: inline-block;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* Screen 1: Start Screen */
+        .start-screen {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .start-screen h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+            letter-spacing: -0.5px;
+            background: linear-gradient(45deg, #a78bfa, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Creator Tag Styling */
+        .creator-tag {
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #fbbf24; /* Premium Amber Gold Color */
+            margin-bottom: 25px;
+            display: block;
+        }
+
+        .start-screen p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 35px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .primary-btn {
+            background: var(--accent-color);
+            color: #121214;
+            border: none;
+            padding: 16px 40px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(167, 139, 250, 0.4);
+        }
+
+        .primary-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(167, 139, 250, 0.6);
+        }
+
+        /* Screen 2: Quiz Screen */
+        .quiz-screen {
+            display: none;
+        }
+
+        .progress-container {
+            margin-bottom: 30px;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #272730;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent-color), #f472b6);
+            transition: width 0.3s ease;
+        }
+
+        .question-text {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .option-btn {
+            background: transparent;
+            border: 2px solid var(--border-color);
+            color: var(--text-main);
+            padding: 18px 22px;
+            border-radius: 12px;
+            text-align: left;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .option-btn:hover {
+            border-color: var(--accent-color);
+            background: var(--option-hover);
+            transform: translateX(5px);
+        }
+
+        /* Screen 3: Detailed Result Screen */
+        .result-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .result-header h2 {
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .result-title {
+            font-size: 2.4rem;
+            color: #fbbf24;
+            margin: 10px 0 25px 0;
+            font-weight: 800;
+        }
+
+        .result-card {
+            background: #16161c;
+            border-radius: 14px;
+            padding: 25px;
+            text-align: left;
+            margin-bottom: 30px;
+            border: 1px solid #272730;
+        }
+
+        .result-section {
+            margin-bottom: 20px;
+        }
+
+        .result-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-body {
+            color: #cbd5e1;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        @media (min-width: 550px) {
+            .meta-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        .meta-box {
+            background: #22222b;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent-color);
+        }
+        .meta-box.strengths { border-left-color: var(--success); }
+        .meta-box.weaknesses { border-left-color: var(--danger); }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <!-- SCREEN 1: Welcome / Start Screen -->
+        <div id="start-screen" class="start-screen">
+            <i class='bx bxs-chess logo-icon'></i>
+            <h1>Find Your Chess Personality</h1>
+            <span class="creator-tag">- BY ANUGRAH SINGH</span>
+            <p>Answer 15 unique real-match situations to uncover your style out of 10 complex grandmaster psychological profiles. Discover your exact strengths, weaknesses, and matching chess legends.</p>
+            <button class="primary-btn" onclick="startQuiz()">Start Test</button>
+        </div>
+
+        <!-- SCREEN 2: Active Quiz Screen -->
+        <div id="quiz-screen" class="quiz-screen">
+            <div class="progress-container">
+                <div class="progress-text">
+                    <span id="question-number">Question 1 of 15</span>
+                    <span id="progress-percent">0% Done</span>
+                </div>
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+            </div>
+
+            <div id="question-box" class="question-text">Loading chess scenario...</div>
+            <div id="options-box" class="options-list"></div>
+        </div>
+
+        <!-- SCREEN 3: Highly Detailed Result Screen -->
+        <div id="result-screen" class="result-screen">
+            <div class="result-header">
+                <i class='bx bxs-award logo-icon' style="color: #fbbf24;"></i>
+                <h2>Your Chess Style Profile</h2>
+                <div id="result-title" class="result-title">Profile Name</div>
+            </div>
+
+            <div class="result-card">
+                <div class="result-section">
+                    <div class="section-title"><i class='bx bx-align-left'></i> Style Summary</div>
+                    <div id="style-summary" class="section-body">Summary details...</div>
+                </div>
+                
+                <div class="result-section">
+                    <div class="section-title"><i class='bx bx-user-voice'></i> Famous Grandmasters</div>
+                    <div id="style-gms" class="section-body" style="font-weight: 600; color: #f472b6;">GMs info...</div>
+                </div>
+
+                <div class="result-section">
+                    <div class="section-title"><i class='bx bx-bulb'></i> Strategic Improvement Tip</div>
+                    <div id="style-tip" class="section-body">Tips...</div>
+                </div>
+
+                <div class="meta-grid">
+                    <div class="meta-box strengths">
+                        <div class="section-title" style="color: var(--success);"><i class='bx bx-plus-circle'></i> Core Strengths</div>
+                        <div id="style-strengths" class="section-body" style="font-size: 0.95rem;">Strengths...</div>
+                    </div>
+                    <div class="meta-box weaknesses">
+                        <div class="section-title" style="color: var(--danger);"><i class='bx bx-minus-circle'></i> Major Weaknesses</div>
+                        <div id="style-weaknesses" class="section-body" style="font-size: 0.95rem;">Weaknesses...</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="primary-btn" onclick="restartQuiz()">Take Test Again</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { q: "How do you naturally map out your early opening systems?", a: [
+                {t: "I trigger raw imbalances immediately to attack straight out of the gate.", p: "romantic"},
+                {t: "I build long term structural micro-edges and space advantages.", p: "strategist"},
+                {t: "I opt for symmetrical, hyper-solid networks where error is impossible.", p: "virtuoso"},
+                {t: "I utilize offbeat lines or side-gambits to destabilize them mentally.", p: "chaos"}
+            ] },
+            { q: "Your king safety is open, but you see a free pawn available on the flank. Your choice?", a: [
+                {t: "Grab it instantly. Chaos is fun, and material counts most.", p: "swindler"},
+                {t: "I run away and hide. Lock down the lines to patch my king immediately.", p: "escapist"},
+                {t: "Calculate it deeply—if engine data allows it, I take it clinically.", p: "technician"},
+                {t: "Leave it alone; my position cannot afford tactical structure gaps.", p: "scientist"}
+            ] },
+            { q: "What situation brings you the highest level of inner comfort?", a: [
+                {t: "Sacrificing minor pieces for unstoppable mating threats.", p: "romantic"},
+                {t: "An endgame where my opponent has zero active squares left to move.", p: "strategist"},
+                {t: "Setting up a sniper-bishop slicing from across the long diagonal safely.", p: "sniper"},
+                {t: "Surviving a dead-lost game by setting up a stalemate trap.", p: "swindler"}
+            ] },
+            { q: "You made a massive calculation blunder and dropped an entire piece. What's your play?", a: [
+                {t: "Go completely rogue! Sacrifice another piece to create a wild smoke screen.", p: "chaos"},
+                {t: "Build a stubborn, cramped defensive wall and prepare for an 80-move grind.", p: "fortress"},
+                {t: "Keep moving rapidly without pausing to fake confidence and save time.", p: "speedster"},
+                {t: "Carefully find the path that gives me the highest statistical drawing odds.", p: "scientist"}
+            ] },
+            { q: "Your opponent has less than 20 seconds on their clock. What is your live adjustment?", a: [
+                {t: "Play incredibly fast, tricky moves to break their rhythm and flag them.", p: "speedster"},
+                {t: "Make zero-risk, super-solid moves. Keep them restricted.", p: "virtuoso"},
+                {t: "Create heavy tactical tension across 3 different files at once.", p: "chaos"},
+                {t: "Simply trust my raw engine precision calculation to finish it off.", p: "technician"}
+            ] },
+            { q: "Which tactical asset gives you the most confidence on the board?", a: [
+                {t: "An advanced passed-pawn charging down the board at full speed.", p: "speedster"},
+                {t: "A beautifully anchored, un-attackable knight deep inside their space.", p: "strategist"},
+                {t: "A massive, hyper-defensive setup that cannot be broken through.", p: "fortress"},
+                {t: "A hidden flank bishop exerting quiet, terrifying pressure over their king.", p: "sniper"}
+            ] },
+            { q: "An opponent plays a highly speculative pawn gambit early on. How do you respond?", a: [
+                {t: "Accept it immediately! I will gladly dismantle their attack later.", p: "fortress"},
+                {t: "Decline it safely and maintain solid central development control.", p: "virtuoso"},
+                {t: "Counter-gambit right back! Let's enter wild, untested waters.", p: "chaos"},
+                {t: "Spent minutes analyzing the absolute theoretical optimal refutation.", p: "scientist"}
+            ] },
+            { q: "How do you mentally feel about a 'Draw' by repetition?", a: [
+                {t: "Frustrating! I would rather risk a loss than accept a boring draw.", p: "romantic"},
+                {t: "A perfectly fine scientific result if the math checks out.", p: "technician"},
+                {t: "A total win if I was escaping a heavily losing position.", p: "escapist"},
+                {t: "Acceptable only if I have tried every single trick to squeeze them first.", p: "swindler"}
+            ] },
+            { q: "What is your main weakness that usually costs you live games?", a: [
+                {t: "Over-extending blindly on an attack that was objectively unsound.", p: "romantic"},
+                {t: "Getting lazy or passive in locked positions and losing focus.", p: "virtuoso"},
+                {t: "Over-analyzing simple variations and falling into deep time trouble.", p: "scientist"},
+                {t: "Panic-trading pieces too early when pressure begins to mount.", p: "escapist"}
+            ] },
+            { q: "Your opponent launches a dangerous mating attack on your king. What's your immediate reaction?", a: [
+                {t: "Ignore it and launch an even faster counter-assault on their king.", p: "romantic"},
+                {t: "Trade heavy pieces instantly to safely cool down the board tension.", p: "virtuoso"},
+                {t: "Flee with my king across the board to an unexpected safe haven.", p: "escapist"},
+                {t: "Set a subtle backdoor counter-trap to catch them over-committing.", p: "swindler"}
+            ] },
+            { q: "What area of chess do you naturally prefer to study or practice?", a: [
+                {t: "Mastering complex tactical patterns and puzzle sprints.", p: "speedster"},
+                {t: "Analyzing clean, instructional grandmaster endgame conversions.", p: "technician"},
+                {t: "Deep positional maneuvering structures and pawn chain theory.", p: "strategist"},
+                {t: "Understanding long-range flank attacks and long-diagonal operations.", p: "sniper"}
+            ] },
+            { q: "If you have a choice of an advantage heading into the late game, what is it?", a: [
+                {t: "An undeniable space chokehold where they can barely shift coordinates.", p: "fortress"},
+                {t: "A tiny, isolated pawn weakness that I can work on for 40 moves.", p: "strategist"},
+                {t: "A clean bishop-pair advantage on an wide open board layout.", p: "sniper"},
+                {t: "A chaotic mess where clocks are low and anything can happen.", p: "speedster"}
+            ] },
+            { q: "How do you view your own pawn structure?", a: [
+                {t: "They are shields designed strictly to keep my pieces safe.", p: "fortress"},
+                {t: "They are long-range missiles meant to shatter lines and advance.", p: "sniper"},
+                {t: "They are the geometric skeleton that dictates my overall strategy.", p: "strategist"},
+                {t: "They are dynamic elements to be sacrificed for fast open files.", p: "romantic"}
+            ] },
+            { q: "When analyzing games with an engine, what are you looking for?", a: [
+                {t: "The absolute cold, objective truth of the position.", p: "scientist"},
+                {t: "The most precise technical way to convert minor imbalances.", p: "technician"},
+                {t: "Where my opponent went wrong so I can trap them next time.", p: "swindler"},
+                {t: "How to avoid positional structures that make me feel stuck.", p: "escapist"}
+            ] },
+            { q: "Ultimately, what is chess to your mind?", a: [
+                {t: "An explosive battlefield for tactical dominance.", p: "romantic"},
+                {t: "A deep geometric blueprint of control and patience.", p: "strategist"},
+                {t: "A strict science where accuracy trumps intuition.", p: "technician"},
+                {t: "A psychological maze where the cleverest mind survives.", p: "chaos"}
+            ] }
+        ];
+
+        const profiles = {
+            "romantic": {
+                title: "The Romantic Attacker 🔥",
+                summary: "You play chess with pure fire, emotion, and artistic passion. You favor tactical initiative over material security and love nothing more than a beautiful piece sacrifice that leads to a checkmate.",
+                gms: "Mikhail Tal, Garry Kasparov, Judit Polgar",
+                tip: "Not every position allows for an attack. Practice constraint; sharpening your quiet positional play will make your final attacks twice as lethal.",
+                strengths: "• Sharp tactical vision<br>• High-pressure generation<br>• Brilliant visualization",
+                weaknesses: "• Over-sacrificing material<br>• Boredom in quiet games<br>• Impatient calculation"
+            },
+            "strategist": {
+                title: "The Deep Strategist 🧠",
+                summary: "You are a master architect. You look at the board as an evolving ecosystem of space, outposts, and structural chains. You prefer suffocating your opponent over 50 flawless moves.",
+                gms: "Magnus Carlsen, Anatoly Karpov, Ding Liren",
+                tip: "Don't get so caught up in your long-term plan that you miss short-term tactical opportunities or immediate blows.",
+                strengths: "• Flawless space control<br>• Excellent prophylaxis<br>• High structural discipline",
+                weaknesses: "• Reluctance to create mess<br>• Passing on quick tactical wins"
+            },
+            "technician": {
+                title: "The Clinical Technician 🔬",
+                summary: "You treat chess like arithmetic. Precision, cold evaluation, and endgame conversions are your favorite fields. You specialize in turning microscopic 1% advantages into clean wins.",
+                gms: "Bobby Fischer, José Raúl Capablanca, Fabiano Caruana",
+                tip: "Chess involves human psychology. Sometimes, a messy move that scares your opponent works better than a cold, robotic line.",
+                strengths: "• Exceptional endgame mastery<br>• Ultra-low blunder rate<br>• High accuracy under pressure",
+                weaknesses: "• Time management troubles<br>• Discomfort with intuitive risks"
+            },
+            "fortress": {
+                title: "The Iron Fortress 🛡️",
+                summary: "You are unbreakable. Your primary joy comes from denying your opponent any counterplay, absorbing their attacks, and frustrating them into making unforced errors.",
+                gms: "Tigran Petrosian, Sergey Karjakin, Anish Giri",
+                tip: "Defense is great, but you need to attack to win. Work on recognizing the exact moment to shift from passive defense into an active counter-offensive.",
+                strengths: "• Massive emotional resilience<br>• Elite micro-defense handling<br>• Hardest profile to beat",
+                weaknesses: "• Overly passive piece placement<br>• Risk of drawing winnable games"
+            },
+            "chaos": {
+                title: "The Master of Chaos 🌪️",
+                summary: "You thrive where others panic. You actively seek double-edged positions, asymmetrical setups, and complicated tactical webs where engines get confused.",
+                gms: "Ian Nepomniachtchi, Daniil Dubov, Alexander Morozevich",
+                tip: "Chaos is a tool, not a lifestyle. Ensure you have a baseline positional backup plan when a strong opponent keeps the position closed.",
+                strengths: "• Unpredictable attacking strings<br>• Elite psychological dominance<br>• High tactical flexibility",
+                weaknesses: "• Positional structure neglect<br>• Vulnerability to quiet players"
+            },
+            "speedster": {
+                title: "The Tactical Speedster ⚡",
+                summary: "Time and tempo are your primary weapons. You rely on rapid reflexes, high calculation velocity, and maintaining clock pressure to trigger stress blunders.",
+                gms: "Hikaru Nakamura, Alireza Firouzja, Andrew Tang",
+                tip: "When playing classical or longer time controls, slow down. Quick instincts can leave subtle positional vulnerabilities behind.",
+                strengths: "• Fast intuitive calculation<br>• Incredible under time-scrambles<br>• Deadly dynamic pace",
+                weaknesses: "• Surface-level shallow thinking<br>• Missing deep slow ideas"
+            },
+            "virtuoso": {
+                title: "The Quiet Virtuoso 🎵",
+                summary: "You love harmony and flow. You place your pieces on natural squares, avoid dirty tactical brawls, and maintain an immaculate, balanced ecosystem on the board.",
+                gms: "Wesley So, Vassily Smyslov, Viswanathan Anand",
+                tip: "Sometimes you have to get your hands dirty. Embrace concrete, messy tactical skirmishes when the position demands a fight.",
+                strengths: "• Flawless piece coordination<br>• Peaceful, un-tiltable mindset<br>• Highly stable performance",
+                weaknesses: "• Lacks aggressive killer-instinct<br>• Can become too safe or passive"
+            },
+            "sniper": {
+                title: "The Long-Range Sniper 🎯",
+                summary: "You operate from the shadows. You love flank openings (1.c4, 1.Nf3, Fianchettos) and use long-range bishops to pierce the board and pressure your opponent from afar.",
+                gms: "Richard Réti, Bent Larsen, Vladimir Kramnik",
+                tip: "Ensure you don't surrender the center completely while executing your flank setups. Central control is always vital.",
+                strengths: "• Excellent flank-pressure creation<br>• High long-diagonal mastery<br>• Deep strategic flexibility",
+                weaknesses: "• Susceptible to early center rushes<br>• Complex defensive tasks"
+            },
+            "scientist": {
+                title: "The Patient Scientist 🧪",
+                summary: "You treat chess as a research problem. You love deep opening preparation, memorizing database lines, and proving the ultimate theoretical truth of a position.",
+                gms: "Mikhail Botvinnik, Maxime Vachier-Lagrave, Peter Svidler",
+                tip: "Trust your intuition during live games. If you run out of book memorization, rely on your logic rather than panicking over forgotten lines.",
+                strengths: "• Deep opening preparation<br>• Hyper-logical decision making<br>• Structural clarity",
+                weaknesses: "• Prone to time trouble<br>• High stress if out of preparation"
+            },
+            "escapist": {
+                title: "The Nimble Escapist 🏃‍♂️",
+                summary: "You are the ultimate survival artist. You are exceptional at running your king to safety, liquidating dangerous attacks into safe endings, and salvaging half-points.",
+                gms: "Viktor Korchnoi, David Bronstein, Levon Aronian",
+                tip: "Stop running away too early! Trust your initial position and stand your ground before looking for safety valves.",
+                strengths: "• Brilliant under extreme duress<br>• High flexibility in transition<br>• Mastery of resource saving",
+                weaknesses: "• Easily yields space and initiative<br>• Prone to psychological fear"
+            },
+            "swindler": {
+                title: "The Tricky Swindler 🃏",
+                summary: "You are the king of traps and chess illusions! Even if your position is completely losing, you never lose hope and love setting sneaky backdoor traps to turn the tables when your opponent least expects it.",
+                gms: "Hikaru Nakamura (Speed Swindles), Magnus Carlsen (Squeeze Swindles)",
+                tip: "Try to avoid getting into losing positions in the first place, so you don't always have to rely on risky tricks.",
+                strengths: "• Unmatched trap-setting skills<br>• Exceptional under extreme time-trouble<br>• Great mental recovery",
+                weaknesses: "• Often plays sub-optimal moves<br>• Relies too heavily on opponent's errors"
+            }
+        };
+
+        let currentIndex = 0;
+        let scoreTracker = { romantic: 0, strategist: 0, technician: 0, fortress: 0, chaos: 0, speedster: 0, virtuoso: 0, sniper: 0, scientist: 0, escapist: 0, swindler: 0 };
+
+        function startQuiz() {
+            document.getElementById("start-screen").style.display = "none";
+            document.getElementById("quiz-screen").style.display = "block";
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if (currentIndex >= questions.length) {
+                showResults();
+                return;
+            }
+
+            const currentQ = questions[currentIndex];
+            document.getElementById("question-number").innerText = `Scenario ${currentIndex + 1} of ${questions.length}`;
+            let percent = Math.round((currentIndex / questions.length) * 100);
+            document.getElementById("progress-percent").innerText = `${percent}% Completed`;
+            document.getElementById("progress-fill").style.width = `${percent}%`;
+
+            document.getElementById("question-box").innerText = currentQ.q;
+
+            const optionsBox = document.getElementById("options-box");
+            optionsBox.innerHTML = "";
+            currentQ.a.forEach(option => {
+                const button = document.createElement("button");
+                button.className = "option-btn";
+                button.innerText = option.t;
+                button.onclick = () => selectOption(option.p);
+                optionsBox.appendChild(button);
+            });
+        }
+
+        function selectOption(personality) {
+            scoreTracker[personality]++;
+            currentIndex++;
+            loadQuestion();
+        }
+
+        function showResults() {
+            document.getElementById("quiz-screen").style.display = "none";
+            document.getElementById("result-screen").style.display = "block";
+
+            let topStyle = Object.keys(scoreTracker).reduce((a, b) => scoreTracker[a] > scoreTracker[b] ? a : b);
+            const data = profiles[topStyle];
+            
+            if (data) {
+                document.getElementById("result-title").innerText = data.title;
+                document.getElementById("style-summary").innerHTML = data.summary;
+                document.getElementById("style-gms").innerHTML = data.gms;
+                document.getElementById("style-tip").innerHTML = data.tip;
+                document.getElementById("style-strengths").innerHTML = data.strengths;
+                document.getElementById("style-weaknesses").innerHTML = data.weaknesses;
+            } else {
+                document.getElementById("result-title").innerText = "The Deep Strategist 🧠";
+                document.getElementById("style-summary").innerHTML = "You love structural advantages and solid plans.";
+            }
+        }
+
+        function restartQuiz() {
+            currentIndex = 0;
+            scoreTracker = { romantic: 0, strategist: 0, technician: 0, fortress: 0, chaos: 0, speedster: 0, virtuoso: 0, sniper: 0, scientist: 0, escapist: 0, swindler: 0 };
+            document.getElementById("result-screen").style.display = "none";
+            document.getElementById("start-screen").style.display = "block";
+        }
+    </script>
+</body>
+</html>
